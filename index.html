@@ -251,11 +251,32 @@ label{display:block;font-size:18px;font-weight:600;margin:14px 0 6px;}
 
 /* ---------- MÓVIL ---------- */
 @media(max-width:700px){
-  .barra-sup{padding:14px 16px;} .marca b{font-size:22px;} main{padding:18px 16px 28px;}
-  .hero h1{font-size:38px;line-height:46px;} .hero p{font-size:20px;}
-  .nav-pildora button{padding:10px 16px;font-size:18px;}
-  .opcion .txt b{font-size:24px;} .placa{width:64px;height:64px;}
-  .ej{flex-wrap:wrap;} .ej img{width:88px;height:88px;}
+  body{font-size:16px;line-height:24px;}
+  .barra-sup{padding:12px 14px;flex-wrap:wrap;gap:8px;} .marca b{font-size:18px;} 
+  .marca span{font-size:12px;display:block;}
+  main{padding:14px 12px 24px;}
+  .secciones{gap:14px;}
+  .hero{padding:24px 16px;border-radius:16px;}
+  .hero h1{font-size:28px;line-height:34px;} .hero p{font-size:16px;}
+  .opcion{padding:16px;gap:14px;}
+  .opcion .txt b{font-size:20px;} .opcion .txt small{font-size:14px;}
+  .placa{width:56px;height:56px;}
+  .placa svg{width:28px;height:28px;}
+  .nav-pildora{gap:4px;width:100%;overflow-x:auto;justify-content:flex-start;}
+  .nav-pildora button{padding:8px 12px;font-size:14px;min-width:auto;}
+  .personas{grid-template-columns:repeat(2,1fr);gap:12px;}
+  .per{padding:16px 10px;} .per .ini{width:56px;height:56px;font-size:24px;border-radius:14px;}
+  .per b{font-size:18px;}
+  .reja3{grid-template-columns:1fr;gap:14px;}
+  .casilla{min-height:auto;padding:16px;gap:12px;}
+  .casilla h2{font-size:20px;line-height:26px;} .casilla .sub{font-size:14px;}
+  .pestanas{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .pestanas button{min-width:auto;flex:0 0 auto;padding:8px 12px;font-size:14px;}
+  .ej{flex-wrap:wrap;gap:10px;} .ej img{width:80px;height:80px;}
+  .ej .detalle{font-size:14px;}
+  .cal.c14{grid-template-columns:repeat(7,1fr);gap:4px;}
+  .dia{padding:8px 2px;font-size:12px;}
+  .pie{padding:12px;font-size:12px;flex-wrap:wrap;gap:8px;}
 }
 </style>
 
@@ -267,6 +288,7 @@ label{display:block;font-size:18px;font-weight:600;margin:14px 0 6px;}
   <div class="marca">
     <div class="sello" id="selloMarca"></div>
     <b id="titulo">Familia Marulanda</b>
+    <span id="subtitulo" style="font-size:14px;color:var(--t2);margin-left:8px"></span>
   </div>
   <nav class="nav-pildora" aria-label="Navegación principal">
     <button onclick="pestana='hoy';pintar()" id="navHoy">Hoy</button>
