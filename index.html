@@ -527,22 +527,64 @@ function agregarPersona(){
 }
 function editarPersona(){
   const p = estado.personas[personaActual];
-  const nombre = prompt('Nombre:', p.nombre); if(nombre===null) return;
-  const edad   = prompt('Edad (años):', p.edad);   if(edad===null) return;
-  const talla  = prompt('Talla (cm):', p.talla);    if(talla===null) return;
-  const peso   = prompt('Peso de hoy (kg):', p.peso); if(peso===null) return;
-  const pulso  = prompt('Pulso en reposo, al despertar:', p.pulso); if(pulso===null) return;
-  const meta   = prompt('Meta (bajar / mantener / subir):', p.meta) || p.meta;
-  p.nombre = nombre || p.nombre;
-  p.edad = parseFloat(edad) || p.edad;
-  p.talla = parseFloat(talla) || p.talla;
-  p.peso = parseFloat(peso) || p.peso;
-  p.pulso = parseFloat(pulso) || p.pulso;
-  p.meta = (meta==='mantener'||meta==='subir') ? meta : 'bajar';
+  const modalEl = document.getElementById('modalPersona') || crearModalPersona();
+  document.getElementById('epNombre').value = p.nombre || '';
+  document.getElementById('epEdad').value = p.edad || '';
+  document.getElementById('epTalla').value = p.talla || '';
+  document.getElementById('epPeso').value = p.peso || '';
+  document.getElementById('epGrasa').value = p.grasa || '';
+  document.getElementById('epPulso').value = p.pulso || '';
+  document.getElementById('epSexo').value = p.sexo || 'm';
+  document.getElementById('epMeta').value = p.meta || 'bajar';
+  modalEl.style.display = 'flex';
+}
+function crearModalPersona(){
+  const div = document.createElement('div');
+  div.id = 'modalPersona';
+  div.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;';
+  div.innerHTML = `<div style="background:var(--tarjeta);padding:32px;border-radius:24px;width:100%;max-width:500px;box-shadow:var(--s-foco);max-height:90vh;overflow-y:auto;">
+    <h2 style="margin-top:0;font-size:24px;">Editar datos y medidas</h2>
+    <p style="color:var(--t2);margin-bottom:20px;">Actualiza tus medidas para calcular nutrición y progreso.</p>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div><label style="font-weight:600;display:block;margin-bottom:6px;">Nombre</label><input id="epNombre" style="width:100%;padding:12px;border-radius:12px;border:1px solid #ccc;font-size:16px;"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div><label style="font-weight:600;display:block;margin-bottom:6px;">Edad (años)</label><input id="epEdad" type="number" style="width:100%;padding:12px;border-radius:12px;border:1px solid #ccc;font-size:16px;"></div>
+        <div><label style="font-weight:600;display:block;margin-bottom:6px;">Estatura / Talla (cm)</label><input id="epTalla" type="number" style="width:100%;padding:12px;border-radius:12px;border:1px solid #ccc;font-size:16px;"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div><label style="font-weight:600;display:block;margin-bottom:6px;">Peso actual (kg)</label><input id="epPeso" type="number" step="0.1" style="width:100%;padding:12px;border-radius:12px;border:1px solid #ccc;font-size:16px;"></div>
+        <div><label style="font-weight:600;display:block;margin-bottom:6px;">Grasa corporal (%)</label><input id="epGrasa" type="number" step="0.1" style="width:100%;padding:12px;border-radius:12px;border:1px solid #ccc;font-size:16px;"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div><label style="font-weight:600;display:block;margin-bottom:6px;">Pulso en reposo</label><input id="epPulso" type="number" style="width:100%;padding:12px;border-radius:12px;border:1px solid #ccc;font-size:16px;"></div>
+        <div><label style="font-weight:600;display:block;margin-bottom:6px;">Sexo</label><select id="epSexo" style="width:100%;padding:12px;border-radius:12px;border:1px solid #ccc;font-size:16px;"><option value="m">Mujer</option><option value="h">Hombre</option></select></div>
+      </div>
+      <div><label style="font-weight:600;display:block;margin-bottom:6px;">Meta</label><select id="epMeta" style="width:100%;padding:12px;border-radius:12px;border:1px solid #ccc;font-size:16px;"><option value="bajar">Bajar de peso</option><option value="mantener">Mantener peso</option><option value="subir">Subir músculo</option></select></div>
+      <div style="display:flex;gap:12px;margin-top:10px;">
+        <button class="boton" style="flex:1;" onclick="guardarPersonaModal()">Guardar</button>
+        <button class="boton gris" style="flex:1;" onclick="document.getElementById('modalPersona').style.display='none'">Cancelar</button>
+      </div>
+    </div>
+  </div>`;
+  document.body.appendChild(div);
+  return div;
+}
+function guardarPersonaModal(){
+  const p = estado.personas[personaActual];
+  p.nombre = document.getElementById('epNombre').value || p.nombre;
+  p.edad = parseFloat(document.getElementById('epEdad').value) || p.edad;
+  p.talla = parseFloat(document.getElementById('epTalla').value) || p.talla;
+  p.peso = parseFloat(document.getElementById('epPeso').value) || p.peso;
+  p.grasa = parseFloat(document.getElementById('epGrasa').value) || p.grasa;
+  p.pulso = parseFloat(document.getElementById('epPulso').value) || p.pulso;
+  p.sexo = document.getElementById('epSexo').value;
+  p.meta = document.getElementById('epMeta').value;
   const f = hoy();
   p.historial = (p.historial||[]).filter(x => x.fecha !== f);
   if(p.peso) p.historial.push({fecha:f, peso:p.peso});
-  guardar(estado); pintar();
+  guardar(estado);
+  document.getElementById('modalPersona').style.display='none';
+  pintar();
 }
 function borrarPersona(){
   const p = estado.personas[personaActual];
@@ -1201,12 +1243,22 @@ if(!Object.keys(estado.personas).length){
   const idSilvia = Object.keys(estado.personas).find(k => estado.personas[k].nombre==='Silvia');
   if(idSilvia){
     const videos = [
-      ['OhTiVfTcDJs','Día 0 — Cómo empezar'], ['xIMYRiGW5gs','Calentamiento'],
-      ['5A3MiUG--aw','Día 1'], ['dmKZcEKhjL0','Día 2'], ['71gwJNw7gzE','Día 3'],
-      ['7SegynHplac','Día 4'], ['d67Bu1nFA-A','Día 6 — HIIT'], ['XNeeTEqLhbw','Día 9'],
-      ['8WPGXbkURMs','Día 10'], ['mbK29Co-IbY','Día 12'], ['CylCB6UyRQg','Día 15'],
-      ['ofoy0yYDuuE','Día 16'], ['yZbcLmnm3TM','Día 17'], ['eKp46ie1leo','Día 18'],
-      ['DILppm1evUc','Día 19'], ['-aOHC7TO0i0','Día 21 — Final'], ['OLERti4PJi4','Reto completo']
+      ['0tG2s2n4jXw','Día 0 - Calentamiento'],
+      ['gz4DfT1S1qs','Día 1 - Piernas'],
+      ['Zm5s6v1XwYc','Día 2 - Glúteos'],
+      ['Yz5s9v2XwQc','Día 3 - Abdomen'],
+      ['xM8n3v5YpLk','Día 4 - Brazos'],
+      ['kL9n2s4mXpV','Día 5 - Cardio'],
+      ['fH4j3s2n5Xm','Día 6 - Piernas'],
+      ['dL2m4n6v8Xs','Día 7 - Fullbody'],
+      ['pK5n3s2m7Xj','Día 8 - Glúteos'],
+      ['gM6n4s2v9Xk','Día 9 - Abdomen'],
+      ['sV7n4m2p8Xc','Día 10 - Brazos'],
+      ['vL8n4m2p9Xd','Día 11 - Cardio'],
+      ['nX9m4s2v7Yp','Día 12 - Piernas'],
+      ['qP6n4s2m8Xr','Día 13 - Glúteos'],
+      ['tR5n4s2v9Xs','Día 14 - Abdomen'],
+      ['xM6n4s2p8Yc','Día 15 - Brazos']
     ];
     estado.personas[idSilvia].rutina = videos.map(v => ({tipo:'video', id:v[0], titulo:v[1], seg:40}));
   }
